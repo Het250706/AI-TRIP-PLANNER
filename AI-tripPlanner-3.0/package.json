@@ -1,0 +1,16 @@
+{
+    "name": "ai-trip-planner-root",
+    "version": "1.0.0",
+    "description": "Root configuration for AI Trip Planner",
+    "main": "index.js",
+    "scripts": {
+        "dev": "concurrently \"npm run dev:server --prefix backend\" \"npm run dev --prefix frontend\"",
+        "install:all": "npm install --prefix backend && npm install --prefix frontend",
+        "backend": "npm run dev:server --prefix backend",
+        "frontend": "npm run dev --prefix frontend",
+        "start": "npm run dev"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
