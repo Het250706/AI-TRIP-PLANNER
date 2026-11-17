@@ -73,13 +73,13 @@ const CreatePost = () => {
       }
 
       const response = editMode
-        ? await api.put(`/users/updatepost/${existingPost._id}`, formData, {
+        ? await api.put(`/api/users/updatepost/${existingPost._id}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${user.token}`
           }
         })
-        : await api.post('/users/createpost', formData, {
+        : await api.post('/api/users/createpost', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${user.token}`
@@ -111,7 +111,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
+    <div className="max-w-2xl mx-auto py-8 px-4 pt-28">
       <h1 className="text-3xl font-bold mb-8 text-center">{editMode ? 'Edit Post' : 'Create New Post'}</h1>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">

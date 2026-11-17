@@ -26,7 +26,11 @@ const TripSchema = new mongoose.Schema({
       ],
     },
   ],
+  coverImage: { type: String, default: "" },
+  status: { type: String, enum: ["upcoming", "completed", "draft"], default: "upcoming" },
+  weatherData: { type: Object, default: null },
   createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const Trip = mongoose.model("Trip", TripSchema);

@@ -83,3 +83,53 @@ export const generateTripItinerary = async (destination, startDate, endDate, bud
     throw new Error("Failed to generate trip itinerary from AI. Please check your API key and quota.");
   }
 };
+
+export const generateLocationDetails = async (locationName) => {
+  if (!openai) {
+    console.warn("⚠️ OpenAI API Key missing. Returning mock location details.");
+    return {
+      overview: {
+        description: `${locationName} is a fantastic destination with a rich history and vibrant culture.`,
+        facts: ["Fact 1", "Fact 2", "Fact 3"]
+      },
+      food: {
+        famousFoods: ["Local Dish 1", "Local Dish 2"],
+        restaurants: [{ name: "Restaurant A", cost: "$$" }, { name: "Restaurant B", cost: "$$$" }],
+        avgCost: "$30"
+      },
+      hotels: {
+        budget: ["Hostel A", "Guesthouse B"],
+        midRange: ["Hotel C", "Suites D"],
+        luxury: ["Resort E", "Palace F"]
+      },
+      attractions: [{ name: "Place 1", fee: "Free", time: "Morning" }],
+      shopping: { markets: ["Market 1"], items: ["Souvenir 2"] },
+      itineraries: { day1: [], day3: [], day5: [] }
+    };
+  }
+
+  const prompt = `
+    Provide comprehensive details about ${locationName} for a travel application.
+    Return a JSON object with:
+    {
+      "overview": { "description": "AI generated summary", "facts": ["fact1", "fact2", "fact3"] },
+      "food": { "famousFoods": [], "restaurants": [{"name": "", "cost": ""}], "avgCost": "" },
+      "hotels": { "budget": [], "midRange": [], "luxury": [] },
+      "attractions": [{"name": "", "fee": "", "time": ""}],
+      "shopping": { "markets": [], "famousItems": [] },
+      "itineraries": { "day1": [], "day3": [], "day5": [] }
+    }
+  `;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }
+    });
+    return JSON.parse(response.choices[0].message.content);
+  } catch (error) {
+    console.error("❌ OpenAI API Error:", error);
+    return null;
+  }
+};

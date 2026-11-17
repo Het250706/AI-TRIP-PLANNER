@@ -27,7 +27,7 @@ const AccountPage = () => {
       }
 
       try {
-        const response = await api.get(`/users/${user._id}`, {
+        const response = await api.get(`/api/users/${user._id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
 
@@ -65,7 +65,7 @@ const AccountPage = () => {
     }
 
     try {
-      await api.put(`/users/${user._id}`, formData, {
+      await api.put(`/api/users/${user._id}`, formData, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       updateUser(formData);
@@ -81,7 +81,7 @@ const AccountPage = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      await api.delete(`/users/deletepost/${postId}`, {
+      await api.delete(`/api/users/deletepost/${postId}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setPosts(posts.filter(post => post._id !== postId));

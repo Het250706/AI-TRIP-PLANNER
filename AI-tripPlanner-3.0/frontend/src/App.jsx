@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Signup from './pages/Signup'
@@ -11,31 +11,33 @@ import ProtectedRoute from './components/ProtectedRoute'
 import PostFeed from './components/PostFeed'
 import CreatePost from './components/CreatePost'
 import AccountPage from './pages/AccountPage'
-import { LoadScript } from '@react-google-maps/api'
+import LocationDetail from './pages/LocationDetail'
 
 const App = () => {
+  const location = useLocation();
+  const isAuthPage = ['/login', '/signup'].includes(location.pathname);
+
   return (
     <>
-      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/signup' element={<Signup />} />
-          <Route path='/login' element={<Login />} />
+      {!isAuthPage && <Navbar />}
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/location/:locationName' element={<LocationDetail />} />
 
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/create-trip' element={<CreateTrip />} />
-            <Route path='/view-trip' element={<ViewTrip />} />
-            <Route path='/my-trips' element={<MyTrips />} />
-            <Route path='/trips/:tripId' element={<ViewTrip />} />
-            <Route path='/createpost' element={<CreatePost />} />
-            <Route path='/explore' element={<PostFeed />} />
-            <Route path='/account' element={<AccountPage />} />
-          </Route>
-        </Routes>
-      </LoadScript>
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/create-trip' element={<CreateTrip />} />
+          <Route path='/view-trip' element={<ViewTrip />} />
+          <Route path='/my-trips' element={<MyTrips />} />
+          <Route path='/trips/:tripId' element={<ViewTrip />} />
+          <Route path='/createpost' element={<CreatePost />} />
+          <Route path='/explore' element={<PostFeed />} />
+          <Route path='/account' element={<AccountPage />} />
+        </Route>
+      </Routes>
     </>
   )
 }

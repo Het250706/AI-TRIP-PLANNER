@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
+import { useTranslation } from "react-i18next";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import api from "../services/api";
@@ -24,6 +25,7 @@ const budgetMap = {
 
 const CreateTrip = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const [formData, setFormData] = useState({
     destination: "",
@@ -179,7 +181,6 @@ const CreateTrip = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden font-sans">
-      <Navbar />
       <div className="absolute inset-0 z-0">
         <Background />
       </div>
@@ -250,7 +251,7 @@ const CreateTrip = () => {
                   <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
                     <MapPin size={20} />
                   </div>
-                  Where to?
+                  {t('destination')}
                 </h2>
                 <div className="relative">
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
@@ -297,7 +298,7 @@ const CreateTrip = () => {
                   <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
                     <Calendar size={20} />
                   </div>
-                  When are you going?
+                  {t('start_date')} & {t('end_date')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative group">
@@ -337,7 +338,7 @@ const CreateTrip = () => {
                   <div className="p-2 bg-green-100 rounded-lg text-green-600">
                     <Wallet size={20} />
                   </div>
-                  What's your budget?
+                  {t('budget')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {budgetOptions.map((option) => (
@@ -377,7 +378,7 @@ const CreateTrip = () => {
                   <div className="p-2 bg-orange-100 rounded-lg text-orange-600">
                     <Palmtree size={20} />
                   </div>
-                  Select your interests
+                  {t('interests')}
                 </h2>
                 <div className="flex flex-wrap gap-3">
                   {interestOptions.map((interest) => {

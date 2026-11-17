@@ -92,3 +92,33 @@ export const getTripById = async (req, res, next) => {
         next(error);
     }
 };
+
+// @desc    Delete Trip
+// @route   DELETE /api/trip/:id
+// @access  Private
+export const deleteTrip = async (req, res, next) => {
+    try {
+        const trip = await Trip.findById(req.params.id);
+        if (!trip) return res.status(404).json({ message: "Trip not found" });
+        if (trip.userId.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: "Not authorized" });
+        }
+        await Trip.findByIdAndDelete(req.params.id);
+        res.status(200).json({ success: true, message: "Trip deleted" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Get Location Details
+// @route   GET /api/trip/location-details/:name
+// @access  Private
+import { generateLocationDetails } from '../services/openaiService.js';
+export const getLocationDetails = async (req, res, next) => {
+    try {
+        const details = await generateLocationDetails(req.params.name);
+        res.status(200).json({ success: true, data: details });
+    } catch (error) {
+        next(error);
+    }
+};

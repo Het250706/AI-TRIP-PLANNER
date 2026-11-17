@@ -63,6 +63,7 @@ app.use(flash());
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/users', usersRouter);
 app.use('/api/ai', airoutes);
 app.use('/api/trip', tripRoutes);
 

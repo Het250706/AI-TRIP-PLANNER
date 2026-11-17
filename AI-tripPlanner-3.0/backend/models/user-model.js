@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
     preferences: [String], // ["beaches", "adventure", "history"]
     trips: [{ type: mongoose.Schema.Types.ObjectId, ref: "Trip" }],
     phone: Number,
-    picture: { type: String, default: "" }
+    picture: { type: String, default: "" },
+    language: { type: String, default: "en" }
 });
 
 const userModel = mongoose.model('users', userSchema);  // ✅ Keep as 'users'

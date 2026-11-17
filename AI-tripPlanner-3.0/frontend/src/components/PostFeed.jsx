@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { FaHeart, FaRegHeart, FaComment, FaTimes, FaTrash } from 'react-icons/fa';
+import { Plus, Compass } from 'lucide-react';
 import { useAuth } from '../context/authContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,7 +20,7 @@ const PostFeed = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await api.get('/users/allposts');
+      const response = await api.get('/api/users/allposts');
       setPosts(response.data.posts || []);
     } catch (err) {
       console.error('Error fetching posts:', err);
@@ -61,7 +62,7 @@ const PostFeed = () => {
       }
 
       // API Call
-      await api.post(`/users/likepost/${postId}`, {}, {
+      await api.post(`/api/users/likepost/${postId}`, {}, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
 
@@ -80,7 +81,7 @@ const PostFeed = () => {
     if (!commentText.trim() || !selectedPost) return;
 
     try {
-      const response = await api.post(`/users/posts/addcomment/${selectedPost._id}`,
+      const response = await api.post(`/api/users/posts/addcomment/${selectedPost._id}`,
         { comment: commentText },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -103,7 +104,7 @@ const PostFeed = () => {
     if (!window.confirm("Delete this comment?")) return;
 
     try {
-      await api.delete(`/users/posts/${selectedPost._id}/comments/${commentId}`, {
+      await api.delete(`/api/users/posts/${selectedPost._id}/comments/${commentId}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
 
@@ -126,33 +127,65 @@ const PostFeed = () => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 pt-24">
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {posts.map(post => (
-          <div
-            key={post._id}
-            onClick={() => setSelectedPost(post)}
-            className="relative group aspect-square cursor-pointer overflow-hidden rounded-lg bg-gray-100"
-          >
-            <img
-              src={post.picture}
-              alt={post.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-            />
+    <div className="max-w-6xl mx-auto px-4 py-8 pt-28">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-gray-100">
+        <div>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tight">Community Explorations</h1>
+          <p className="text-gray-500 font-medium text-sm mt-1">Discover real travel stories and moments shared by our explorer community.</p>
+        </div>
+        <button
+          onClick={() => navigate('/createpost')}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-blue-600/20 transition-all hover:scale-105 active:scale-95"
+        >
+          <Plus size={18} /> Share Your Trip
+        </button>
+      </div>
 
-            {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-8 text-white font-bold text-lg">
-              <div className="flex items-center gap-2">
-                <FaHeart /> {post.likes}
-              </div>
-              <div className="flex items-center gap-2">
-                <FaComment /> {post.comments?.length || 0}
+      {/* Grid Layout or Empty State */}
+      {posts.length === 0 ? (
+        <div className="text-center py-24 px-6 bg-gray-50 rounded-[2.5rem] border border-gray-100 my-8">
+          <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/10">
+            <Compass size={36} />
+          </div>
+          <h3 className="text-2xl font-black text-gray-900 mb-2">No Explorations Yet</h3>
+          <p className="text-gray-500 font-medium max-w-md mx-auto mb-8 leading-relaxed">
+            Be the first adventurer to share travel photos, hidden gems, or stories with fellow travelers!
+          </p>
+          <button
+            onClick={() => navigate('/createpost')}
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-2xl shadow-xl shadow-blue-600/25 transition-all hover:scale-105"
+          >
+            <Plus size={20} /> Create the First Post
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {posts.map(post => (
+            <div
+              key={post._id}
+              onClick={() => setSelectedPost(post)}
+              className="relative group aspect-square cursor-pointer overflow-hidden rounded-lg bg-gray-100"
+            >
+              <img
+                src={post.picture}
+                alt={post.name}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-8 text-white font-bold text-lg">
+                <div className="flex items-center gap-2">
+                  <FaHeart /> {post.likes}
+                </div>
+                <div className="flex items-center gap-2">
+                  <FaComment /> {post.comments?.length || 0}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Post Detail Modal */}
       <AnimatePresence>
